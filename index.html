@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Make your code Pretty!</title>
+    <link href="prism.css" rel="stylesheet" />
+    <style>
+      [contenteditable]:focus {
+        outline: 0px solid transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <select name="language" id="lang"></select>
+    <button onclick="highlight()" title="ctrl + enter">Highlight</button>
+    <input type="color" />
+    <div id="code-div">
+      <pre><code id="code-editor" contenteditable="true" onkeypress="highlightKey(event)">for num in range(1,101):
+        string = ""
+        if num % 3 == 0:
+            string = string + "Fizz"
+        if num % 4 == 0:
+            string = string + "Buzz"
+        if num % 4 != 0 and num % 3 != 0:
+            string = string + str(num)
+        print(string)</code></pre>
+    </div>
+    <button onclick="print()">Download</button>
+    <script src="prism.js"></script>
+    <script src="./html2canvas.min.js"></script>
+    <script>
+      let codeEditor = document.querySelector("#code-editor");
+      let codeDiv = document.querySelector("#code-div");
+      highlight();
+      let languages = {
+        None: "",
+        javascript: "language-js",
+        python: "language-py",
+      };
+      let select = document.querySelector("select");
+      let opts = "";
+      Object.entries(languages).forEach((e) => {
+        let [k, v] = e;
+        opts += `<option value="${v}">${k}</option>`;
+      });
+      select.innerHTML = opts;
+
+      select.addEventListener("change", (e) => {
+        codeEditor.className = e.target.value;
+        highlight();
+      });
+      function highlightKey(e) {
+        if (e.key == "Enter" && e.shiftKey) {
+          e.preventDefault();
+          highlight();
+        }
+      }
+      function highlight() {
+        Prism.highlightElement(codeEditor);
+        codeEditor.blur();
+      }
+
+      function print() {
+        html2canvas(codeDiv).then((canvas) => {
+          let codeImage = canvas.toDataURL("image/png");
+          var link = document.createElement("a");
+          link.download = "code.png";
+          link.href = "data:" + codeImage;
+          link.click();
+        });
+      }
+    </script>
+  </body>
+</html>
