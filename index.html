@@ -6,13 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Make your code Pretty!</title>
     <link href="prism.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@1.30.1/tsparticles.min.js"></script>
+
     <style>
       [contenteditable]:focus {
         outline: 0px solid transparent;
       }
+      #tsparticles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        z-index: -1;
+      }
     </style>
   </head>
   <body>
+    <div id="tsparticles"></div>
     <select name="language" id="lang"></select>
     <button onclick="highlight()" title="ctrl + enter">Highlight</button>
     <input type="color" />
@@ -31,6 +43,14 @@
     <script src="prism.js"></script>
     <script src="./html2canvas.min.js"></script>
     <script>
+      tsParticles
+        .loadJSON("tsparticles", "fruits.json")
+        .then((container) => {
+          console.log("callback - tsparticles config loaded");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       let codeEditor = document.querySelector("#code-editor");
       let codeDiv = document.querySelector("#code-div");
       highlight();
